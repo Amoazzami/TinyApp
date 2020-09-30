@@ -87,8 +87,14 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls/");
 });
 
+app.get("/login", (req, res) => {
+  res.render("login", {username: null});
+});
+
 app.post("/login", (req, res) => {
   console.log(req.body.username);
+  const email = req.body.email;
+  const password = req.body.password;
   res.cookie('username', req.body.username);
   res.redirect("/urls");
 });
@@ -98,7 +104,21 @@ app.post('/logout', (req, res) => {
   res.redirect('urls')
 });
 
+app.get("/register", (req, res) => {
+  const templateVars = {
+  username: req.cookies["username"] || null,
+  };
+  console.log("reference", templateVars.username)
+  res.render("register", templateVars);
+});
+
+// app.post("/register", (req, res) => {
+//   const {email, password} = req.body;
+//   // if (!email || !password) {
+//   //   return res.send('email and passowrd cannot be blank');
+//   // }
+// });
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
-
