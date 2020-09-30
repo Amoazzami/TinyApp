@@ -12,6 +12,19 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const usersDataBase = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
+
 function generateRandomString(length) {
   let result = '';
   let letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -30,9 +43,12 @@ app.post("/urls", (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
+  let cookieID = req.cookies["user_id"];
+  let userObject = usersDataBase[cookieID];
+  console.log(cookieID);
   const templateVars = { 
   urls: urlDatabase, 
-  username: req.cookies['username']};
+  user: userObject};
   res.render('urls_index', templateVars);
 });
 
@@ -106,19 +122,54 @@ app.post('/logout', (req, res) => {
 
 app.get("/register", (req, res) => {
   const templateVars = {
-  username: req.cookies["username"] || null,
+  user: null
   };
-  console.log("reference", templateVars.username)
   res.render("register", templateVars);
 });
 
-// app.post("/register", (req, res) => {
-//   const {email, password} = req.body;
-//   // if (!email || !password) {
-//   //   return res.send('email and passowrd cannot be blank');
-//   // }
-// });
+app.get("/404", (req, res) => {
+  res.render("404")
+});
+
+app.post("/register", (req, res) => {
+  const {id, email, password} = req.body;
+  if (email === '' || password === '') {
+    return res.redirect("/404")
+  } 
+  let foundUser; 
+  for (let id in usersDataBase){
+    if (usersDataBase[id].email === email) {
+    foundUser = usersDataBase[id]; 
+    break
+    }
+  }
+  if (foundUser) {
+    return res.redirect("/404")
+  }
+  let userID = generateRandomString(5);
+  usersDataBase[userID] = { 
+    id: userID,
+    email: req.body.email,
+    password: req.body.password
+  }
+  res.cookie('user_id', userID);
+  return res.redirect("/hello")
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+
+// // if email + password empty strings 
+// response with 400 status code
+
+// regieter with an email in user.userObject400 mesasge 
+
+// let foundUser= null;
+// for (const userID in the usersDataBase) {
+//   const user = usersDataBase[userId];
+//   if (user.email === email) :
+//   foundUser = user; 
+// }
+

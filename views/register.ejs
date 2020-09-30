@@ -9,6 +9,7 @@
   <%- include('partials/_header') %>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Register</title>
 </head>
 <body> 
@@ -16,10 +17,10 @@
   <h1>Register</h1>
   <form method="POST" action="/register">
     <label for="email">Email</label>
-    <input id="email" type="email" name="email" required placeholder="enter your email"  />
+    <input id="email" name="email"  placeholder="enter your email"  />
     <br/>
     <label for="password">Password</label>
-    <input id="password" type="password" name="password" required placeholder="enter your password" />
+    <input id="password" name="password"  placeholder="enter your password" />
     <br/>
     <button type="submit">Register!</button>
   </form>
