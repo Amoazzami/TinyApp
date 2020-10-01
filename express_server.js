@@ -47,7 +47,7 @@ app.get('/urls', (req, res) => {
   let userObject = usersDataBase[cookieID];
   console.log(cookieID);
   const templateVars = { 
-  urls: urlDatabase, 
+  urls: urlDatabase,
   user: userObject};
   res.render('urls_index', templateVars);
 });
@@ -73,7 +73,10 @@ res.redirect(`/urls/${req.params.id}`);
 });
 
 app.get("/urls/new", (req, res) => {
+  let cookieID = req.cookies["user_id"];
+  let userObject = usersDataBase[cookieID];
   const templateVars = {
+    user: userObject,
     username: req.cookies["username"],
   };
   res.render("urls_new", templateVars);
@@ -104,7 +107,9 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  res.render("login", {username: null});
+  let cookieID = req.cookies["user_id"];
+  let userObject = usersDataBase[cookieID];
+  res.render("login", {username: null, user: userObject});
 });
 
 app.post("/login", (req, res) => {
@@ -116,7 +121,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post('/logout', (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   res.redirect('urls')
 });
 
